@@ -1,0 +1,46 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+AddElementTag("v1.0", $borderColor="#d73027")
+AddElementTag("v1.1", $fontColor="#d73027")
+AddElementTag("backup", $fontColor="orange")
+
+!define DEVICONS https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/devicons
+!define FONTAWESOME https://raw.githubusercontent.com/tupadr3/plantuml-icon-font-sprites/master/font-awesome-5
+!include DEVICONS/react.puml
+!include DEVICONS/php.puml
+!include DEVICONS/msql_server.puml
+!include FONTAWESOME/users.puml
+
+LAYOUT_WITH_LEGEND()
+
+Person_Ext(user, "Usuário", '', $sprite="users")
+Person(gestor, "Gestor", "", $sprite="users", $tags="v1.1")
+System_Ext(auth, "Autenticação GOV.BR", "Serviço de autenticação do GOV.BR", $tags="v1.0")
+
+System_Boundary(c1, "SESMT") {
+    Container(spa, "Empresa", "React", "Registro e acompanhamento do SESMT", $sprite="react")
+    Container(spaAdmin, "Gestor", "React", "Gestão e controle dos registros", $sprite="react",$tags="v1.1")
+
+    Container(api, "API", "Laravel", "Lida com toda a lógica de negócios", $sprite="php")
+    ContainerDb(db, "Banco de Dados", "Microsoft SQL", "Armazena informações das empresas e funcionários", $sprite="msql_server")
+    Container(authLDAP, "Autenticação SIT", "SSO", "Serviço de autenticação do sso da SIT", $tags="v1.0")
+}
+
+System_Ext(c2, "Serviços de Dados"){
+    ContainerDb(eSocial, "E-Social", "Base de Dados", "Serviço de dados do e-Social", $tags="v1.0")
+    ContainerDb(scpo, "SCPO", "Base de Dados", "Serviço de dados do Sistema de cadastro de obras", $tags="v1.0")
+    ContainerDb(cno, "CNO", "Base de Dados", "Serviço de dados do Cadastro Nacional de Obras da Receita Federal", $tags="v1.0")
+}
+    
+Rel(user, auth, "Usa", "https")
+Rel(gestor, authLDAP, "Usa", "https")
+Rel(spa, api, "Usa", "https")
+Rel(spaAdmin, api, "Usa", "https")
+Rel_R(api, db, "Lê/Escreve")
+Rel_R(api, c2, "Lê", "https")
+Rel(auth, spa, "Usa", "https")
+Rel(authLDAP, spaAdmin, "Usa", "https")
+
+SHOW_LEGEND()
+@enduml

@@ -1,0 +1,313 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Proposta de arquitetura",
+        "description": "Proposta de arquitura básica para projetos genéricos",
+        "license": {
+            "name": "Apache 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "0.0.1RC1"
+    },
+    "servers": [
+        {
+            "url": "http://localhost/api"
+        }
+    ],
+    "paths": {
+        "/api/auth": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Post your email and password and we will return a token. Use the token in the 'Authorization' header like so 'Bearer YOUR_TOKEN'",
+                "description": "",
+                "operationId": "",
+                "requestBody": {
+                    "description": "The Token Request",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "your@email.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "YOUR_PASSWORD"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "email": {
+                                            "type": "string",
+                                            "example": "your@email.com"
+                                        },
+                                        "password": {
+                                            "type": "string",
+                                            "example": "YOUR_PASSWORD"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "The provided credentials are incorrect."
+                    }
+                }
+            }
+        },
+        "/exemplos": {
+            "get": {
+                "tags": [
+                    "Exemplo"
+                ],
+                "summary": "Listar exemplos",
+                "description": "Retorna a lista de exemplos",
+                "operationId": "list",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Exemplo"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Missing Data"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Exemplo"
+                ],
+                "summary": "Criar exemplo",
+                "description": "Criar exemplo",
+                "operationId": "store",
+                "requestBody": {
+                    "description": "Criar exemplo",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "data": {
+                                        "$ref": "#/components/schemas/Exemplo"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Exemplo"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation exception"
+                    }
+                }
+            }
+        },
+        "/exemplos/{exemplo_id}": {
+            "get": {
+                "tags": [
+                    "Exemplo"
+                ],
+                "summary": "Visualizar exemplo",
+                "description": "Visualizar exemplo",
+                "operationId": "show",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/Exemplo--id"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/Exemplo"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Exemplo não encontrado"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Exemplo"
+                ],
+                "summary": "Excluir um exemplo",
+                "description": "Remove o registro do exemplo",
+                "operationId": "delete",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/Exemplo--id"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    },
+                    "404": {
+                        "description": "Exemplo not found"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Exemplo"
+                ],
+                "summary": "Atualizar exemplo",
+                "description": "Atualizar exemplo",
+                "operationId": "update",
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/Exemplo--id"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Identificador do exemplo",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "data": {
+                                        "$ref": "#/components/schemas/Exemplo"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Exemplo": {
+                "title": "Exemplo",
+                "description": "Exemplo schema",
+                "required": [],
+                "properties": {
+                    "id": {
+                        "title": "id",
+                        "description": "identificador do exmeplo",
+                        "type": "integer",
+                        "readOnly": "true",
+                        "example": "1"
+                    },
+                    "nome": {
+                        "title": "nome",
+                        "description": "nome do exemplo",
+                        "type": "string",
+                        "example": "Vaca amarela"
+                    },
+                    "quantidade": {
+                        "title": "quantidade",
+                        "description": "quanttidade de exemplos",
+                        "type": "integer",
+                        "example": "99"
+                    },
+                    "valor_real": {
+                        "title": "valor_real",
+                        "description": "valor de exemplos",
+                        "type": "number",
+                        "example": "99.99"
+                    },
+                    "dt_exemplo": {
+                        "title": "dt_exemplo",
+                        "type": "dateTime",
+                        "example": "2022-07-04T02:41:42.336Z"
+                    },
+                    "created_at": {
+                        "title": "created_at",
+                        "type": "dateTime",
+                        "readOnly": "true",
+                        "example": "2022-07-04T02:41:42.336Z"
+                    },
+                    "updated_at": {
+                        "title": "updated_at",
+                        "type": "dateTime",
+                        "readOnly": "true",
+                        "example": "2022-07-04T02:41:42.336Z"
+                    }
+                },
+                "type": "object"
+            },
+            "Exemplos": {
+                "title": "Exemplos",
+                "properties": {
+                    "data": {
+                        "title": "data",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Exemplo"
+                        }
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "parameters": {
+            "Exemplo--id": {
+                "name": "exemplo_id",
+                "in": "path",
+                "description": "Id do Exemplo",
+                "required": true,
+                "schema": {
+                    "type": "integer",
+                    "example": "1"
+                }
+            }
+        }
+    }
+}
